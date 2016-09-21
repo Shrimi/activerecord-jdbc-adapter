@@ -459,8 +459,10 @@ module ArJdbc
       # removing any ASC/DESC modifiers
       order_columns = [ orders ]; order_columns.flatten! # AR 3.x vs 4.x
       order_columns.map! do |column|
-        column = column.to_sql unless column.is_a?(String) # handle AREL node
-        column.split(',').collect!{ |s| s.split.first }
+        unless column.nil?
+          column = column.to_sql unless column.is_a?(String) # handle AREL node
+          column.split(',').collect! { |s| s.split.first }
+        end
       end.flatten!
       order_columns.reject!(&:blank?)
       order_columns = order_columns.zip(0...order_columns.size).to_a
